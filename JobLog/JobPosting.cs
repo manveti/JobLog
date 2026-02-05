@@ -69,6 +69,43 @@ namespace JobLog {
             this.timeline = new List<JobEvent>();
         }
 
+        public JobPosting copy() {
+            return new JobPosting(
+                this.employer,
+                this.recruiter,
+                this.title,
+                this.salary,
+                this.description,
+                this.notes,
+                this.urls,
+                this.posted_date,
+                this.saved_date
+            ) {
+                applied_date = this.applied_date,
+                timeline = new List<JobEvent>(this.timeline),
+                closed_date = this.closed_date,
+                closed_reason = this.closed_reason
+            };
+        }
+
+        public void update(JobPosting posting) {
+            this.employer = posting.employer;
+            this.recruiter = posting.recruiter;
+            this.title = posting.title;
+            this.salary = posting.salary;
+            this.description = posting.description;
+            this.notes = posting.notes;
+            this.urls.Clear();
+            this.urls.AddRange(posting.urls);
+            this.posted_date = posting.posted_date;
+            this.saved_date = posting.saved_date;
+            this.applied_date = posting.applied_date;
+            this.timeline.Clear();
+            this.timeline.AddRange(posting.timeline);
+            this.closed_date = posting.closed_date;
+            this.closed_reason = posting.closed_reason;
+        }
+
         public void addUrl(string url) {
             this.urls.Add(url);
         }

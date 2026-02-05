@@ -16,7 +16,7 @@ namespace JobLog {
         }
     }
 
-    class JobTracker {
+    public class JobTracker {
         public string data_dir;
         protected string jobs_dir;
         protected string blacklist_path;

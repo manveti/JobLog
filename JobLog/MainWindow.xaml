@@ -5,8 +5,128 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JobLog"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="JobLog" Width="1800" Height="900">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Left panel: job postings list -->
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="Job Postings" Margin="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
+                <CheckBox Grid.Row="0" Grid.Column="0" Margin="1" Name="show_pending_box" Content="Pending"
+                          IsChecked="True"/><!--Click=-->
+                <CheckBox Grid.Row="0" Grid.Column="1" Margin="1" Name="show_in_flight_box" Content="In Flight"
+                          IsChecked="True"/><!--Click=-->
+                <CheckBox Grid.Row="0" Grid.Column="2" Margin="1" Name="show_closed_box" Content="Closed"/><!--Click=-->
+
+                <Label Grid.Row="0" Grid.Column="4" Margin="1" Content="Sort:"/>
+                <ComboBox Grid.Row="0" Grid.Column="5" Margin="1" Name="jobs_sort_box"><!--SelectionChanged=-->
+                    <ComboBoxItem Content="Employer"/>
+                    <ComboBoxItem Content="Recruiter"/>
+                    <ComboBoxItem Content="Posted" IsSelected="True"/>
+                    <ComboBoxItem Content="Last Activity"/>
+                </ComboBox>
+
+                <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Name="jobs_list" SelectedValuePath="guid">
+                    <!--SelectionChanged=-->
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Company" DisplayMemberBinding="{Binding company}"/>
+                            <GridViewColumn Header="Title" DisplayMemberBinding="{Binding title}"/>
+                            <GridViewColumn Header="Salary" DisplayMemberBinding="{Binding salary}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Grid.Column="0" Margin="1" Content="Add..." Click="addJobPosting"/>
+                    <Button Grid.Row="0" Grid.Column="1" Margin="1" Content="Edit..."/><!--Click=...-->
+                    <Button Grid.Row="0" Grid.Column="3" Margin="1" Content="Remove"/><!--Click=...-->
+                </Grid>
+            </Grid>
+        </GroupBox>
+
+        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5"/>
+        
+        <!-- Middle panel: job posting details -->
+        <GroupBox Grid.Row="0" Grid.Column="2" Header="Job Details" Margin="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <local:JobPostingControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" x:Name="posting_ctrl" IsReadOnly="True"/>
+                <Button Grid.Row="1" Grid.Column="0" Margin="1" Content="Update Notes"/><!--Click=...-->
+                <Button Grid.Row="1" Grid.Column="1" Margin="1" Content="Revert Notes"/><!--Click=...-->
+                <Button Grid.Row="1" Grid.Column="3" Margin="1" Content="Remove"/><!--Click=...-->
+            </Grid>
+        </GroupBox>
+
+        <GridSplitter Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5"/>
+        
+        <!-- Right panel: ignored companies -->
+        <GroupBox Grid.Row="0" Grid.Column="4" Header="Ignored Companies" Margin="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Name="ignored_list" SelectedValuePath="idx">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Company" DisplayMemberBinding="{Binding name}"/>
+                            <GridViewColumn Header="Reason" DisplayMemberBinding="{Binding reason}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <Button Grid.Row="1" Grid.Column="0" Margin="1" Content="Add..."/><!--Click=...-->
+                <Button Grid.Row="1" Grid.Column="1" Margin="1" Content="Edit..."/><!--Click=...-->
+                <Button Grid.Row="1" Grid.Column="3" Margin="1" Content="Remove"/><!--Click=...-->
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>
