@@ -36,21 +36,17 @@
                 </Grid.RowDefinitions>
 
                 <CheckBox Grid.Row="0" Grid.Column="0" Margin="1" Name="show_pending_box" Content="Pending"
-                          IsChecked="True"/><!--Click=-->
+                          IsChecked="True" Click="jobFiltersChanged"/>
                 <CheckBox Grid.Row="0" Grid.Column="1" Margin="1" Name="show_in_flight_box" Content="In Flight"
-                          IsChecked="True"/><!--Click=-->
-                <CheckBox Grid.Row="0" Grid.Column="2" Margin="1" Name="show_closed_box" Content="Closed"/><!--Click=-->
+                          IsChecked="True" Click="jobFiltersChanged"/>
+                <CheckBox Grid.Row="0" Grid.Column="2" Margin="1" Name="show_closed_box" Content="Closed"
+                          Click="jobFiltersChanged"/>
 
                 <Label Grid.Row="0" Grid.Column="4" Margin="1" Content="Sort:"/>
-                <ComboBox Grid.Row="0" Grid.Column="5" Margin="1" Name="jobs_sort_box"><!--SelectionChanged=-->
-                    <ComboBoxItem Content="Employer"/>
-                    <ComboBoxItem Content="Recruiter"/>
-                    <ComboBoxItem Content="Posted" IsSelected="True"/>
-                    <ComboBoxItem Content="Last Activity"/>
-                </ComboBox>
+                <!-- jobs_sort_box defined under jobs_list so SelectionChanged handler doesn't cause problems -->
 
-                <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Name="jobs_list" SelectedValuePath="guid">
-                    <!--SelectionChanged=-->
+                <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Name="jobs_list"
+                          SelectedValuePath="guid" SelectionChanged="selectJob">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Company" DisplayMemberBinding="{Binding company}"/>
@@ -59,6 +55,14 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
+
+                <!-- jobs_sort_box defined here so SelectionChanged handler doesn't cause problems -->
+                <ComboBox Grid.Row="0" Grid.Column="5" Margin="1" Name="jobs_sort_box" SelectionChanged="jobSortChanged">
+                    <ComboBoxItem Content="Employer"/>
+                    <ComboBoxItem Content="Recruiter"/>
+                    <ComboBoxItem Content="Opened" IsSelected="True"/>
+                    <ComboBoxItem Content="Last Activity"/>
+                </ComboBox>
 
                 <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6">
                     <Grid.ColumnDefinitions>
@@ -71,8 +75,8 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Button Grid.Row="0" Grid.Column="0" Margin="1" Content="Add..." Click="addJobPosting"/>
-                    <Button Grid.Row="0" Grid.Column="1" Margin="1" Content="Edit..."/><!--Click=...-->
-                    <Button Grid.Row="0" Grid.Column="3" Margin="1" Content="Remove"/><!--Click=...-->
+                    <Button Grid.Row="0" Grid.Column="1" Margin="1" Content="Edit..." Click="editJobPosting"/>
+                    <Button Grid.Row="0" Grid.Column="3" Margin="1" Content="Remove" Click="removeJobPosting"/>
                 </Grid>
             </Grid>
         </GroupBox>
@@ -92,10 +96,10 @@
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <local:JobPostingControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" x:Name="posting_ctrl" IsReadOnly="True"/>
-                <Button Grid.Row="1" Grid.Column="0" Margin="1" Content="Update Notes"/><!--Click=...-->
-                <Button Grid.Row="1" Grid.Column="1" Margin="1" Content="Revert Notes"/><!--Click=...-->
-                <Button Grid.Row="1" Grid.Column="3" Margin="1" Content="Remove"/><!--Click=...-->
+                <local:JobPostingControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" x:Name="posting_ctrl"/>
+                <Button Grid.Row="1" Grid.Column="0" Margin="1" Content="Apply Changes" Click="applyJobPostingChanges"/>
+                <Button Grid.Row="1" Grid.Column="1" Margin="1" Content="Revert Changes" Click="revertJobPosting"/>
+                <Button Grid.Row="1" Grid.Column="3" Margin="1" Content="Remove" Click="removeJobPosting"/>
             </Grid>
         </GroupBox>
 
@@ -114,10 +118,10 @@
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <ListView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Name="ignored_list" SelectedValuePath="idx">
+                <ListView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Name="ignored_list" SelectedValuePath="company">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Company" DisplayMemberBinding="{Binding name}"/>
+                            <GridViewColumn Header="Company" DisplayMemberBinding="{Binding company}"/>
                             <GridViewColumn Header="Reason" DisplayMemberBinding="{Binding reason}"/>
                         </GridView>
                     </ListView.View>

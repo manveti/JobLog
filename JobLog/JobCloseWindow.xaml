@@ -27,7 +27,7 @@
         <Label Grid.Row="1" Grid.Column="0" Margin="1" Content="Reason:"/>
         <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="1" Name="reason_box" IsEditable="True">
             <ComboBoxItem Content="Ghosted"/>
-            <ComboBoxItem Content="Rejected"/>
+            <ComboBoxItem Content="Rejected" IsSelected="True"/>
             <ComboBoxItem Content="Abandoned"/>
         </ComboBox>
 

@@ -1,23 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace JobLog {
-    /// <summary>
-    /// Interaction logic for JobPostingControl.xaml
-    /// </summary>
-
     public class JobEventRow {
         public const int IDX_POSTED = -2;
         public const int IDX_SAVED = -3;
@@ -39,6 +26,9 @@ namespace JobLog {
         }
     }
 
+    /// <summary>
+    /// Interaction logic for JobPostingControl.xaml
+    /// </summary>
     public partial class JobPostingControl : UserControl {
         protected JobPosting posting;
         public DateTime? posted_date;
@@ -47,32 +37,12 @@ namespace JobLog {
         public List<JobEventRow> timeline_rows;
         public DateTime? closed_date;
         public string closed_reason;
+        public Dictionary<string, string> new_blacklist;
 
         public JobPostingControl() {
+            this.new_blacklist = new Dictionary<string, string>();
             this.InitializeComponent();
             this.updatePosting();
-        }
-
-        protected static void IsReadOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            JobPostingControl ctrl = (JobPostingControl)d;
-            bool isReadOnly = (bool)(e.NewValue);
-            ctrl.employer_box.IsReadOnly = isReadOnly;
-            ctrl.recruiter_box.IsReadOnly = isReadOnly;
-            ctrl.title_box.IsReadOnly = isReadOnly;
-            ctrl.salary_box.IsReadOnly = isReadOnly;
-            ctrl.description_box.IsReadOnly = isReadOnly;
-        }
-
-        public static readonly DependencyProperty IsReadOnlyProp = DependencyProperty.Register(
-            "IsReadOnly",
-            typeof(bool),
-            typeof(JobPostingControl),
-            new PropertyMetadata(false, new PropertyChangedCallback(IsReadOnlyChanged))
-        );
-
-        public bool IsReadOnly {
-            get => (bool)this.GetValue(IsReadOnlyProp);
-            set => this.SetValue(IsReadOnlyProp, value);
         }
 
         public string employer {
@@ -324,7 +294,18 @@ namespace JobLog {
             this.closed_reason = dlg.reason_box.Text;
             this.updateTimeline();
 
-            //TODO: if this.employer && dlg.ignore_employer_box.IsChecked: blacklist employer; same for recruiter
+            if ((!String.IsNullOrEmpty(this.employer)) && (dlg.ignore_employer_box.IsChecked == true)) {
+                this.new_blacklist[this.employer] = this.closed_reason;
+                if (String.IsNullOrEmpty(this.new_blacklist[this.employer])) {
+                    this.new_blacklist[this.employer] = "Rejected";
+                }
+            }
+            if ((!String.IsNullOrEmpty(this.recruiter)) && (dlg.ignore_recruiter_box.IsChecked == true)) {
+                this.new_blacklist[this.recruiter] = this.closed_reason;
+                if (String.IsNullOrEmpty(this.new_blacklist[this.recruiter])) {
+                    this.new_blacklist[this.recruiter] = "Rejected";
+                }
+            }
         }
 
         public void addUrl(object sender, RoutedEventArgs e) {
