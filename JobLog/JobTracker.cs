@@ -37,7 +37,10 @@ namespace JobLog {
                 }
                 DataContractSerializer serializer = new DataContractSerializer(typeof(JobPosting));
                 using (FileStream f = new FileStream(fn, FileMode.OpenOrCreate)) {
-                    XmlDictionaryReader xmlReader = XmlDictionaryReader.CreateTextReader(f, new XmlDictionaryReaderQuotas());
+                    // job descriptions may be arbitrarily large, but they are manually-entered so no DoS concern
+                    XmlDictionaryReaderQuotas quotas = new XmlDictionaryReaderQuotas();
+                    quotas.MaxStringContentLength = Int32.MaxValue;
+                    XmlDictionaryReader xmlReader = XmlDictionaryReader.CreateTextReader(f, quotas);
                     this.jobs[guid] = (JobPosting)(serializer.ReadObject(xmlReader, true));
                 }
             }
@@ -83,31 +86,31 @@ namespace JobLog {
         public Guid addJob(JobPosting posting) {
             Guid guid = Guid.NewGuid();
             this.jobs[guid] = posting;
-            //TODO: this.saveJob(guid);
+            this.saveJob(guid);
             return guid;
         }
 
         public void updateJob(Guid guid, JobPosting posting) {
             this.jobs[guid].update(posting);
-            //TODO: this.saveJob(guid);
+            this.saveJob(guid);
         }
 
         public void removeJob(Guid guid) {
             this.jobs.Remove(guid);
-            //TODO: delete file this.jobPath(guid)
+            File.Delete(this.jobPath(guid));
         }
 
         public void addUpdateBlacklistEntry(string company, string reason, bool save = true) {
             this.blacklist[company] = reason;
             if (save) {
-                //TODO: this.saveBlacklist();
+                this.saveBlacklist();
             }
         }
 
         public void removeBlacklistEntry(string company, bool save = true) {
             this.blacklist.Remove(company);
             if (save) {
-                //TODO: this.saveBlacklist();
+                this.saveBlacklist();
             }
         }
     }

@@ -58,16 +58,16 @@ namespace JobLog {
                     return result;
                 }
                 // fall back to opened date
-                return this.opened.CompareTo(row.opened);
+                return row.opened.CompareTo(this.opened);
             case SORT_RECRUITER:
                 result = this.recruiter.CompareTo(row.recruiter);
                 if (result != 0) {
                     return result;
                 }
                 // fall back to opened date
-                return this.opened.CompareTo(row.opened);
+                return row.opened.CompareTo(this.opened);
             case SORT_RECENT:
-                result = this.last_activity.CompareTo(row.last_activity);
+                result = row.last_activity.CompareTo(this.last_activity);
                 if (result != 0) {
                     return result;
                 }
@@ -79,7 +79,7 @@ namespace JobLog {
                 // ...then to recruiter
                 return this.recruiter.CompareTo(row.recruiter);
             default:
-                result = this.opened.CompareTo(row.opened);
+                result = row.opened.CompareTo(this.opened);
                 if (result != 0) {
                     return result;
                 }
@@ -209,6 +209,7 @@ namespace JobLog {
             this.blacklist_rows.Sort((x, y) => x.company.CompareTo(y.company));
             this.ignored_list.Items.Refresh();
             this.ignored_list.SelectedValue = selected;
+            MainWindow.fix_listview_column_widths(this.ignored_list);
         }
 
         protected void updateBlacklistFromPostingControl(JobPostingControl ctrl) {
@@ -219,7 +220,7 @@ namespace JobLog {
             }
             if (changed) {
                 ctrl.new_blacklist.Clear();
-                //TODO: this.tracker.saveBlacklist();
+                this.tracker.saveBlacklist();
                 this.updateBlacklistRows();
             }
         }
@@ -283,7 +284,50 @@ namespace JobLog {
             this.posting_ctrl.updatePosting(posting);
         }
 
-        //TODO: add/edit/remove blacklist entry
+        protected void addBlacklistEntry(object sender, RoutedEventArgs e) {
+            BlacklistEntryWindow dlg = new BlacklistEntryWindow();
+            dlg.Owner = this;
+            dlg.ShowDialog();
+            if ((!dlg.valid) || (String.IsNullOrEmpty(dlg.company_box.Text))) {
+                return;
+            }
+
+            this.tracker.addUpdateBlacklistEntry(dlg.company_box.Text, dlg.reason_box.Text);
+            this.updateBlacklistRows();
+        }
+
+        protected void editBlacklistEntry(object sender, RoutedEventArgs e) {
+            string selected = this.ignored_list.SelectedValue as string;
+            if ((String.IsNullOrEmpty(selected)) || (!this.tracker.blacklist.ContainsKey(selected))) {
+                return;
+            }
+
+            BlacklistEntryWindow dlg = new BlacklistEntryWindow();
+            dlg.Owner = this;
+            dlg.company_box.Text = selected;
+            dlg.reason_box.Text = this.tracker.blacklist[selected];
+            dlg.ShowDialog();
+            if ((!dlg.valid) || (String.IsNullOrEmpty(dlg.company_box.Text))) {
+                return;
+            }
+
+            if (dlg.company_box.Text != selected) {
+                // company changed; remove old blacklist entry
+                this.tracker.removeBlacklistEntry(selected, save: false);
+            }
+            this.tracker.addUpdateBlacklistEntry(dlg.company_box.Text, dlg.reason_box.Text);
+            this.updateBlacklistRows();
+        }
+
+        protected void removeBlacklistEntry(object sender, RoutedEventArgs e) {
+            string selected = this.ignored_list.SelectedValue as string;
+            if ((String.IsNullOrEmpty(selected)) || (!this.tracker.blacklist.ContainsKey(selected))) {
+                return;
+            }
+
+            this.tracker.removeBlacklistEntry(selected);
+            this.updateBlacklistRows();
+        }
 
         public static void fix_listview_column_widths(ListView listView) {
             GridView grid = listView.View as GridView;

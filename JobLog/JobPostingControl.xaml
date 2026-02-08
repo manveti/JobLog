@@ -130,13 +130,13 @@
         <GridSplitter Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
 
         <GroupBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Header="Description">
-            <TextBox Name="description_box" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+            <TextBox Name="description_box" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
         </GroupBox>
 
         <GridSplitter Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="5"/>
 
         <GroupBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Header="Notes">
-            <TextBox Name="notes_box" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+            <TextBox Name="notes_box" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
         </GroupBox>
 
         <Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2">
