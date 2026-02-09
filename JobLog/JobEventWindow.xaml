@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JobLog"
         mc:Ignorable="d"
+        FocusManager.FocusedElement="{Binding ElementName=description_box}"
         Title="Timeline Event" Width="300" Height="150" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JobLog"
         mc:Ignorable="d"
+        FocusManager.FocusedElement="{Binding ElementName=company_box}"
         Title="Ignored Company" Width="300" Height="130" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>
