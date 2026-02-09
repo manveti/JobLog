@@ -38,7 +38,7 @@
                 <CheckBox Grid.Row="0" Grid.Column="0" Margin="1" Name="show_pending_box" Content="Pending"
                           IsChecked="True" Click="jobFiltersChanged"/>
                 <CheckBox Grid.Row="0" Grid.Column="1" Margin="1" Name="show_in_flight_box" Content="In Flight"
-                          IsChecked="True" Click="jobFiltersChanged"/>
+                          Click="jobFiltersChanged"/>
                 <CheckBox Grid.Row="0" Grid.Column="2" Margin="1" Name="show_closed_box" Content="Closed"
                           Click="jobFiltersChanged"/>
 
