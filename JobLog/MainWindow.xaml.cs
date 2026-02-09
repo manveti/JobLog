@@ -188,7 +188,7 @@ namespace JobLog {
             if ((!new_sel.HasValue) || (new_sel == this.selected_job)) {
                 return;
             }
-            this.applyJobPostingChanges(sender, e);
+            bool need_refresh = this.applyJobPostingChangesIfNeeded();
             this.selected_job = new_sel;
             if (!this.tracker.jobs.ContainsKey(this.selected_job.Value)) {
                 this.selected_job = null;
@@ -198,6 +198,9 @@ namespace JobLog {
                 posting = this.tracker.jobs[this.selected_job.Value];
             }
             this.posting_ctrl.updatePosting(posting);
+            if (need_refresh) {
+                this.updateJobRows();
+            }
         }
 
         protected void updateBlacklistRows() {
@@ -265,13 +268,23 @@ namespace JobLog {
             this.updateJobRows();
         }
 
-        protected void applyJobPostingChanges(object sender, RoutedEventArgs e) {
+        protected bool applyJobPostingChangesIfNeeded() {
             if ((!this.selected_job.HasValue) || (!this.tracker.jobs.ContainsKey(this.selected_job.Value))) {
-                return;
+                return false;
+            }
+            bool needed = this.posting_ctrl.changed;
+            if (!needed) {
+                return false;
             }
             this.updateBlacklistFromPostingControl(this.posting_ctrl);
-            //TODO: only do this if something changed
             this.tracker.updateJob(this.selected_job.Value, this.posting_ctrl.getPosting());
+            return needed;
+        }
+
+        protected void applyJobPostingChanges(object sender, RoutedEventArgs e) {
+            if (!this.applyJobPostingChangesIfNeeded()) {
+                return;
+            }
             // need full refresh because something might have changed w.r.t. sorting or filtering
             this.updateJobRows();
         }

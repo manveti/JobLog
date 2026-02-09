@@ -38,6 +38,7 @@ namespace JobLog {
         public DateTime? closed_date;
         public string closed_reason;
         public Dictionary<string, string> new_blacklist;
+        protected bool lists_changed;
 
         public JobPostingControl() {
             this.new_blacklist = new Dictionary<string, string>();
@@ -75,6 +76,21 @@ namespace JobLog {
             set => this.notes_box.Text = value ?? "";
         }
 
+        public bool changed => (
+            (this.lists_changed) ||
+            (this.employer != this.posting.employer) ||
+            (this.recruiter != this.posting.recruiter) ||
+            (this.title != this.posting.title) ||
+            (this.salary != this.posting.salary) ||
+            (this.description != this.posting.description) ||
+            (this.notes != this.posting.notes) ||
+            (this.posted_date != this.posting.posted_date) ||
+            (this.saved_date != this.posting.saved_date) ||
+            (this.applied_date != this.posting.applied_date) ||
+            (this.closed_date != this.posting.closed_date) ||
+            (this.closed_reason != this.posting.closed_reason)
+        );
+
         public void updatePosting(JobPosting posting = null) {
             this.posting = posting?.copy() ?? new JobPosting();
             this.employer = this.posting.employer;
@@ -91,6 +107,7 @@ namespace JobLog {
             this.closed_reason = this.posting.closed_reason;
             this.timeline_rows = new List<JobEventRow>();
             this.timeline_list.ItemsSource = this.timeline_rows;
+            this.lists_changed = false;
             this.updateTimeline();
         }
 
@@ -106,6 +123,7 @@ namespace JobLog {
             this.posting.applied_date = this.applied_date;
             this.posting.closed_date = this.closed_date;
             this.posting.closed_reason = this.closed_reason;
+            this.lists_changed = false;
             return this.posting;
         }
 
@@ -157,6 +175,7 @@ namespace JobLog {
                 this.posting.addEvent(dlg.description_box.Text, dlg.date_box.SelectedDate);
                 break;
             }
+            this.lists_changed = true;
             this.updateTimeline();
         }
 
@@ -248,6 +267,7 @@ namespace JobLog {
                 }
                 break;
             }
+            this.lists_changed = true;
             this.updateTimeline();
         }
 
@@ -276,6 +296,7 @@ namespace JobLog {
                 }
                 break;
             }
+            this.lists_changed = true;
             this.updateTimeline();
         }
 
@@ -292,6 +313,7 @@ namespace JobLog {
 
             this.closed_date = dlg.date_box.SelectedDate;
             this.closed_reason = dlg.reason_box.Text;
+            this.lists_changed = true;
             this.updateTimeline();
 
             if ((!String.IsNullOrEmpty(this.employer)) && (dlg.ignore_employer_box.IsChecked == true)) {
@@ -317,6 +339,7 @@ namespace JobLog {
             }
 
             this.posting.addUrl(dlg.url_box.Text);
+            this.lists_changed = true;
             this.urls_list.Items.Refresh();
         }
 
@@ -335,6 +358,7 @@ namespace JobLog {
             }
 
             this.posting.updateUrl(idx, dlg.url_box.Text);
+            this.lists_changed = true;
             this.urls_list.Items.Refresh();
         }
 
@@ -345,6 +369,7 @@ namespace JobLog {
             }
 
             this.posting.removeUrl(idx);
+            this.lists_changed = true;
             this.urls_list.Items.Refresh();
         }
 
