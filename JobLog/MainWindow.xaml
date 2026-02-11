@@ -8,11 +8,11 @@
         Title="JobLog" Width="1800" Height="900">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="6*"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -49,6 +49,7 @@
                           SelectedValuePath="guid" SelectionChanged="selectJob">
                     <ListView.View>
                         <GridView>
+                            <GridViewColumn Header="Age" DisplayMemberBinding="{Binding age}"/>
                             <GridViewColumn Header="Company" DisplayMemberBinding="{Binding company}"/>
                             <GridViewColumn Header="Title" DisplayMemberBinding="{Binding title}"/>
                             <GridViewColumn Header="Salary" DisplayMemberBinding="{Binding salary}"/>

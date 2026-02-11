@@ -18,11 +18,13 @@ namespace JobLog {
         protected string _salary;
         public DateTime opened;
         public DateTime last_activity;
+        protected string _age;
 
         public Guid guid => this._guid;
         public string company => this._company;
         public string title => this._title;
         public string salary => this._salary;
+        public string age => this._age;
 
         public JobPostingRow(
             Guid guid,
@@ -47,6 +49,19 @@ namespace JobLog {
             this._salary = salary;
             this.opened = opened;
             this.last_activity = last_activity;
+            TimeSpan age = DateTime.Today - opened;
+            if (age.TotalDays >= 365) {
+                this._age = $"{age.TotalDays / 365.24:F0}y";
+            }
+            else if (age.TotalDays >= 30) {
+                this._age = $"{age.TotalDays / 30.4:F0}m";
+            }
+            else if (age.TotalDays >= 7) {
+                this._age = $"{age.TotalDays / 7:F0}w";
+            }
+            else {
+                this._age = $"{age.TotalDays}d";
+            }
         }
 
         public int CompareTo(JobPostingRow row, int field = SORT_OPENED) {
